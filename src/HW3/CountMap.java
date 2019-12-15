@@ -1,3 +1,5 @@
+package HW3;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,22 +12,21 @@ public class CountMap<K> implements CountMapable<K> {
     }
 
     @Override
+    public Map<? extends K, ? extends Integer> asMap(){
+        return hashMap;
+    }
+
+    @Override
+    public void toMap(Map<? super K, ? super Integer> map) {
+        map.putAll(hashMap);
+    }
+
+    @Override
     public void add(K key) {
         if (hashMap.containsKey(key)){
             hashMap.put(key, hashMap.get(key) + 1);
         } else {
             hashMap.put(key, 1);
-        }
-    }
-
-    @Override
-    public void addAll(CountMap<K> countMap) {
-        for (K k : countMap.hashMap.keySet()) {
-            if (hashMap.containsKey(k)){
-                map.put(k, countMap.getCount(k) + hashMap.get(k));
-            } else {
-                map.put(k, countMap.getCount(k));
-            }
         }
     }
 
@@ -39,7 +40,7 @@ public class CountMap<K> implements CountMapable<K> {
 
     @Override
     public int remove(K key) {
-        if (hashMap.containsKey(key)){
+        if (hashMap.containsKey(key)) {
             return hashMap.remove(key);
         }
         return 0;
@@ -51,18 +52,11 @@ public class CountMap<K> implements CountMapable<K> {
     }
 
     @Override
-    public Map<K, Integer> asMap(){
-        return hashMap;
-    }
-
-    @Override
-    public void copyTo(Map<K, Integer> map) {
-        for (K k : hashMap.keySet()) {
-            if (map.containsKey(k)){
-                map.put(k, map.get(k) + hashMap.get(k));
-            } else {
-                map.put(k, hashMap.get(k));
-            }
+    public void addAll(CountMap<? extends K> source) {
+        Map<? extends K, ? extends Integer> sourceMap = source.asMap();
+        for (Map.Entry<? extends K, ? extends Integer> entry : sourceMap.entrySet()) {
+            hashMap.merge(entry.getKey(), entry.getValue(), Integer::sum);
         }
     }
+
 }

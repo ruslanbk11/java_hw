@@ -1,8 +1,10 @@
+package HW3;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class CollectionUtils {
+public class CollectionUtils{
     public static <T> void addAll(List<? extends T> source, List<? super T> destination){
         destination.addAll(source);
     }
@@ -23,11 +25,11 @@ public class CollectionUtils {
         source.add(object);
     }
 
-    public static <T> void removeAll(List<? super T> removeFrom, List<? super T> c2){
+    public static <T> void removeAll(List<? super T> removeFrom, List<? extends T> c2){
         removeFrom.removeAll(c2);
     }
 
-    public static <T> boolean containsAll(List<? super T> c1, List<? super T> c2){
+    public static <T> boolean containsAll(List<? super T> c1, List<? extends T> c2){
         for (Object o : c2) {
             boolean flag = false;
             for (Object o1 : c1) {
@@ -43,7 +45,7 @@ public class CollectionUtils {
         return true;
     }
 
-    public static <T> boolean containsAny(List<? super T> c1, List<? super T> c2){
+    public static <T> boolean containsAny(List<? super T> c1, List<? extends T> c2){
         for (Object o : c2) {
             for (Object o1 : c1) {
                 if (o1.equals(o)){
@@ -54,14 +56,24 @@ public class CollectionUtils {
         return false;
     }
 
-    public static <T> List<? super T> range(List<? super T> list, T min, T max){
-        int minInd = list.indexOf(min);
-        int maxInd = list.indexOf(max);
-        return list.subList(minInd, maxInd);
+    public static <L, T extends Comparable<? super L>> List<L> range(List<L> list, T min, T max) {
+        List<L> newArray = CollectionUtils.newArrayList();
+        for (L element : list) {
+            if (min.compareTo(element) <= 0 && max.compareTo(element) >= 0) {
+                newArray.add(element);
+            }
+        }
+        return newArray;
     }
 
-    /*public static List<? super T> range(List<? super T> list, Object min, Object max, Comparator comparator){
-
-    }*/
+    public static <L, T extends L> List<L> range(List<L> list, T min, T max, Comparator<? super L> comparator) {
+        List<L> newArray = CollectionUtils.newArrayList();
+        for (L element : list) {
+            if (comparator.compare(min, element) <= 0 && comparator.compare(max, element) >= 0) {
+                newArray.add(element);
+            }
+        }
+        return newArray;
+    }
 
 }
