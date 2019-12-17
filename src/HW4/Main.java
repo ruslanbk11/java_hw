@@ -1,3 +1,7 @@
+package HW4;
+
+import HW4.SimpleProxy;
+
 import java.util.HashMap;
 import java.util.Map;
 
